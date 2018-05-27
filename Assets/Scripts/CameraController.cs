@@ -1,6 +1,5 @@
 ﻿using GamepadInput;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
@@ -57,25 +56,6 @@ namespace Assets.Scripts
             _positionRotation.y += joyStick.x * TurnSpeed;
             _lookAtRotation.y += joyStick.x * TurnSpeed;
         }
-
-        //private void UpdateRotation()
-        //{
-        //    var joyStick = GamePad.GetAxis(GamePad.Axis.RightStick, GamePad.Index.Any);
-        //    if (joyStick.sqrMagnitude < 0.01f)
-        //        return;
-
-        //    var upDownAngle = Vector3.Angle(_lookAtOffset - _positionOffset, Vector3.up);
-        //    if (upDownAngle > 30 && joyStick.y > 0 || upDownAngle < 150 && joyStick.y < 0)
-        //    {
-        //        var upDown = Quaternion.AngleAxis(-joyStick.y * TurnSpeed, Vector3.Cross(Vector3.up, _lookAtOffset));
-        //        _lookAtOffset = upDown * _lookAtOffset;
-        //        _positionOffset = upDown * _positionOffset;
-        //    }
-
-        //    var leftRight = Quaternion.AngleAxis(joyStick.x * TurnSpeed, Vector3.up);
-        //    _lookAtOffset = leftRight * _lookAtOffset;
-        //    _positionOffset = leftRight * _positionOffset;
-        //}
 
         private Vector3 GetPositionOffset()
         {

@@ -46,7 +46,7 @@ namespace Assets.Scripts
 
             var acceleration = -Friction * velocity;
 
-            return IsGrounded()
+            return _characterController.isGrounded
                 ? acceleration
                 : acceleration * AirMovement;
         }
@@ -59,7 +59,7 @@ namespace Assets.Scripts
             {
                 return velocity * FallingGravityFactor;
             }
-            else if (!GamePad.GetButton(GamePad.Button.A, GamePad.Index.Any) && !IsGrounded())
+            else if (!GamePad.GetButton(GamePad.Button.A, GamePad.Index.Any) && !_characterController.isGrounded)
             {
                 return velocity * JumpingGravityFactor;
             }
@@ -69,7 +69,7 @@ namespace Assets.Scripts
 
         private Vector3 GetJumpVelocity()
         {
-            return IsGrounded() && GamePad.GetButtonDown(GamePad.Button.A, GamePad.Index.Any)
+            return _characterController.isGrounded && GamePad.GetButtonDown(GamePad.Button.A, GamePad.Index.Any)
                 ? Vector3.up * JumpSpeed
                 : Vector3.zero;
         }
@@ -83,35 +83,9 @@ namespace Assets.Scripts
 
             var velocity = cameraRotation * new Vector3(joyStick.x, 0.0f, joyStick.y) * Speed;
 
-            return IsGrounded()
+            return _characterController.isGrounded
                 ? velocity
                 : velocity * AirMovement;
         }
-
-        private bool IsGrounded()
-        {
-            return _characterController.isGrounded;
-        }
-
-        //void OnTriggerEnter(Collider other)
-        //{
-        //    if (!other.CompareTag("Player"))
-        //    {
-        //        _isActuallyGrounded = true;
-        //    }
-        //}
-
-        //void OnTriggerStay(Collider other)
-        //{
-        //    if (!other.CompareTag("Player"))
-        //    {
-        //        _isActuallyGrounded = true;
-        //    }
-        //}
-
-        //void OnTriggerExit(Collider other)
-        //{
-        //    _isActuallyGrounded = false;
-        //}
     }
 }

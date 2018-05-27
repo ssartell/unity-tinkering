@@ -14,10 +14,13 @@ namespace Assets.Scripts
 
         // Update is called once per frame
         void OnDrawGizmos() {
-            if (_characterController.isGrounded)
+            if (_characterController != null)
             {
-                Gizmos.color = Color.cyan;
-                Gizmos.DrawCube(_characterController.transform.position, Vector3.one * 5);
+                if (_characterController.isGrounded)
+                {
+                    Gizmos.color = Color.cyan;
+                    Gizmos.DrawCube(_characterController.transform.position, Vector3.one * 5);
+                }
             }
         }
     }

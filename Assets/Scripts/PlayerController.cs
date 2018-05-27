@@ -15,6 +15,8 @@ namespace Assets.Scripts
         public float AirMovement = 0.5f;
 
         private CharacterController _characterController;
+        private bool _isActuallyGrounded;
+        private Vector3 _velocity;
 
         // Use this for initialization
         void Start()
@@ -24,24 +26,27 @@ namespace Assets.Scripts
 
         void FixedUpdate()
         {
-            var velocity = _characterController.velocity;
+            if (_characterController.isGrounded && _velocity.y < 0)
+            {
+                _velocity.y = 0.0f;
+            }
 
-            velocity += GetMovementVelocity();
-            velocity += GetJumpVelocity();
-            velocity += GetFriction();
-            velocity += GetGravity();
-
-            _characterController.Move(velocity * Time.fixedDeltaTime);
+            _velocity += GetMovementVelocity();
+            _velocity += GetJumpVelocity();
+            _velocity += GetFriction();
+            _velocity += GetGravity();
+            
+            _characterController.Move(_velocity * Time.fixedDeltaTime);
         }
 
         private Vector3 GetFriction()
         {
-            var velocity = _characterController.velocity;
+            var velocity = _velocity;
             velocity.y = 0;
 
             var acceleration = -Friction * velocity;
 
-            return _characterController.isGrounded
+            return IsGrounded()
                 ? acceleration
                 : acceleration * AirMovement;
         }
@@ -54,7 +59,7 @@ namespace Assets.Scripts
             {
                 return velocity * FallingGravityFactor;
             }
-            else if (!GamePad.GetButton(GamePad.Button.A, GamePad.Index.Any) && !_characterController.isGrounded)
+            else if (!GamePad.GetButton(GamePad.Button.A, GamePad.Index.Any) && !IsGrounded())
             {
                 return velocity * JumpingGravityFactor;
             }
@@ -64,7 +69,7 @@ namespace Assets.Scripts
 
         private Vector3 GetJumpVelocity()
         {
-            return _characterController.isGrounded && GamePad.GetButtonDown(GamePad.Button.A, GamePad.Index.Any)
+            return IsGrounded() && GamePad.GetButtonDown(GamePad.Button.A, GamePad.Index.Any)
                 ? Vector3.up * JumpSpeed
                 : Vector3.zero;
         }
@@ -78,9 +83,35 @@ namespace Assets.Scripts
 
             var velocity = cameraRotation * new Vector3(joyStick.x, 0.0f, joyStick.y) * Speed;
 
-            return _characterController.isGrounded
+            return IsGrounded()
                 ? velocity
                 : velocity * AirMovement;
         }
+
+        private bool IsGrounded()
+        {
+            return _characterController.isGrounded;
+        }
+
+        //void OnTriggerEnter(Collider other)
+        //{
+        //    if (!other.CompareTag("Player"))
+        //    {
+        //        _isActuallyGrounded = true;
+        //    }
+        //}
+
+        //void OnTriggerStay(Collider other)
+        //{
+        //    if (!other.CompareTag("Player"))
+        //    {
+        //        _isActuallyGrounded = true;
+        //    }
+        //}
+
+        //void OnTriggerExit(Collider other)
+        //{
+        //    _isActuallyGrounded = false;
+        //}
     }
 }
